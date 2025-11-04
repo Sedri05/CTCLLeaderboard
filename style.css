@@ -1,0 +1,242 @@
+:root {
+    --bg-gradient-light: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    --bg-gradient-dark: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    --card-bg-light: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+    --card-bg-dark: linear-gradient(to bottom, #2d3748 0%, #1a202c 100%);
+    --text-color-light: #2d3748;
+    --text-color-dark: #e2e8f0;
+    --border-color-light: rgba(255, 255, 255, 0.18);
+    --border-color-dark: rgba(255, 255, 255, 0.1);
+    --hover-bg-light: rgba(240, 247, 255, 0.8);
+    --hover-bg-dark: rgba(28, 33, 41, 0.8);
+    --even-row-light: rgba(249, 250, 251, 0.8);
+    --even-row-dark: rgba(45, 55, 72, 0.3);
+    --shadow-color-light: rgba(0, 0, 0, 0.1);
+    --shadow-color-dark: rgba(0, 0, 0, 0.3);
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: var(--bg-gradient-light);
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+body.dark-mode {
+    background: var(--bg-gradient-dark);
+    color: var(--text-color-dark);
+}
+
+h1 {
+    text-align: center;
+    color: var(--text-color-light);
+    font-size: 2.5em;
+    margin-bottom: 1.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode h1 {
+    color: var(--text-color-dark);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.leaderboard {
+    background: var(--card-bg-light);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px var(--shadow-color-light);
+    overflow: hidden;
+    border: 1px solid var(--border-color-light);
+    backdrop-filter: blur(12px);
+    transition: all 0.3s ease;
+}
+
+.dark-mode .leaderboard {
+    background: var(--card-bg-dark);
+    box-shadow: 0 10px 25px var(--shadow-color-dark);
+    border-color: var(--border-color-dark);
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+th,
+td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.dark-mode td {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-color-dark);
+}
+
+th {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9em;
+}
+
+.dark-mode th {
+    background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+}
+
+tr:nth-child(even) {
+    background: linear-gradient(to right, var(--even-row-light), rgba(249, 250, 251, 0.4));
+}
+
+.dark-mode tr:nth-child(even) {
+    background: linear-gradient(to right, var(--even-row-dark), rgba(45, 55, 72, 0.1));
+}
+
+.rank {
+    font-weight: bold;
+    width: 50px;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+.height {
+    text-align: right;
+    font-family: "Consolas", monospace;
+    font-weight: 500;
+}
+
+.loading {
+    text-align: center;
+    padding: 30px;
+    font-style: italic;
+    color: #666;
+    background: linear-gradient(to right, var(--even-row-light), rgba(249, 250, 251, 0.4));
+}
+
+.dark-mode .loading {
+    color: #a0aec0;
+    background: linear-gradient(to right, var(--even-row-dark), rgba(45, 55, 72, 0.1));
+}
+
+.error {
+    text-align: center;
+    padding: 30px;
+    color: #d32f2f;
+    background: linear-gradient(to right, rgba(255, 235, 235, 0.8), rgba(255, 235, 235, 0.4));
+}
+
+.dark-mode .error {
+    color: #f56565;
+    background: linear-gradient(to right, rgba(45, 55, 72, 0.8), rgba(45, 55, 72, 0.4));
+}
+
+/* Top 3 styling with gradients */
+tr:nth-child(1) {
+    background: linear-gradient(to right, rgba(255, 250, 230, 0.8), rgba(255, 250, 230, 0.4));
+}
+tr:nth-child(2) {
+    background: linear-gradient(to right, rgba(247, 250, 252, 0.8), rgba(247, 250, 252, 0.4));
+}
+tr:nth-child(3) {
+    background: linear-gradient(to right, rgba(255, 245, 235, 0.8), rgba(255, 245, 235, 0.4));
+}
+
+.dark-mode tr:nth-child(1) {
+    background: linear-gradient(to right, rgba(45, 55, 72, 0.9), rgba(45, 55, 72, 0.5));
+}
+.dark-mode tr:nth-child(2) {
+    background: linear-gradient(to right, rgba(45, 55, 72, 0.8), rgba(45, 55, 72, 0.4));
+}
+.dark-mode tr:nth-child(3) {
+    background: linear-gradient(to right, rgba(45, 55, 72, 0.7), rgba(45, 55, 72, 0.3));
+}
+
+tr:nth-child(1) .rank {
+    color: transparent;
+    background: linear-gradient(45deg, #ffd700, #ffed4a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-weight: 800;
+}
+tr:nth-child(2) .rank {
+    color: transparent;
+    background: linear-gradient(45deg, #c0c0c0, #e5e7eb);
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-weight: 800;
+}
+tr:nth-child(3) .rank {
+    color: transparent;
+    background: linear-gradient(45deg, #cd7f32, #dba572);
+    -webkit-background-clip: text;
+    background-clip: text;
+    font-weight: 800;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+    color: white;
+    cursor: pointer;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.theme-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode .theme-toggle {
+    background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Position change indicators */
+.position-change {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+    font-size: 0.9em;
+    font-weight: normal;
+}
+
+.position-up {
+    color: #10b981;
+}
+
+.position-down {
+    color: #ef4444;
+}
+
+.dark-mode .position-up {
+    color: #34d399;
+}
+
+.dark-mode .position-down {
+    color: #f87171;
+}
+
+tr:hover {
+    background: linear-gradient(to right, var(--hover-bg-light), rgba(240, 247, 255, 0.4));
+    /*transform: translateX(4px);*/
+}
+
+.dark-mode tr:hover {
+    background: linear-gradient(to right, var(--hover-bg-dark), rgba(45, 55, 72, 0.4));
+}
