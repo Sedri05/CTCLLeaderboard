@@ -142,5 +142,5 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchLeaderboard();
 
     // Refresh data every 60 seconds
-    setInterval(fetchLeaderboard, 60000);
+    //setInterval(fetchLeaderboard, 60000);
 });
