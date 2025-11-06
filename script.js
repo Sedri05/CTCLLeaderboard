@@ -34,12 +34,13 @@ const FLOOR_HEIGHTS = [ // NUMBER IS START OF THE FLOOR
     520,    // Floor 13 height (PM477)
     580,    // Floor 14 height (Van Thias)
     620,    // Floor 15 height (Rosati)
-    680,    // Floor 16 height (Nether Bat)
-    720,    // Floor 17 height (Rock Monster)
-    760,    // Floor 18 height (COUQ)
-    840,    // Floor 19 height (Another User)
-    880,    // Floor 20 height (Skarbels)
-    900,    // Floor 21 Height (Roof)
+    700,    // Floor 16 height (Nether Bat)
+    740,    // Floor 17 height (Rock Monster)
+    780,    // Floor 18 height (COUQ)
+    911,    // Floor 19 height (Another User)
+    940,    // Floor 20 height (Skarbels)
+    980,    // Floor 21 Height (Roof)
+
 ];
 
 function calculateFloor(height) {
