@@ -66,8 +66,9 @@ async function fetchActiveRuns() {
             const completionPercentage = Math.max(0, ((formattedHeight / 1000) * 100).toFixed(1));
             const timeElapsed = Date.now() - new Date(run.startedAt).getTime();
             const secondsElapsed = Math.floor(timeElapsed / 1000);
-            const minutesElapsed = Math.floor(secondsElapsed / 60);
-            const formattedElapsed = `${minutesElapsed}m ${secondsElapsed % 60}s`;
+            const hoursElapsed = Math.floor(secondsElapsed / 3600);
+            const minutesElapsed = Math.floor((secondsElapsed % 3600) / 60);
+            const formattedElapsed = `${hoursElapsed}h ${minutesElapsed}m ${secondsElapsed % 60}s`;
 
             row.innerHTML = `
                 <td>${run.playerName}</td>
