@@ -11,7 +11,7 @@ async function fetchActiveRuns() {
         if (!Array.isArray(runs) || runs.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="3" class="loading">No active runs right now.</td>
+                    <td colspan="5" class="loading">No active runs right now.</td>
                 </tr>
             `;
             return;
@@ -24,7 +24,11 @@ async function fetchActiveRuns() {
         runs.forEach(run => {
             const row = document.createElement('tr');
             
-            const currentHeight = `${formatHeight(run.maxHeight)}m`
+            const formattedHeight = formatHeight(run.maxHeight);
+            const currentHeight = `${formattedHeight}m`;
+            // Calculate floor and completion (mirrors leaderboard logic)
+            const floorNumber = calculateFloor(formattedHeight);
+            const completionPercentage = Math.max(0, ((formattedHeight / 1000) * 100).toFixed(1));
             const timeElapsed = Date.now() - new Date(run.startedAt).getTime();
             const secondsElapsed = Math.floor(timeElapsed / 1000);
             const minutesElapsed = Math.floor(secondsElapsed / 60);
@@ -33,6 +37,8 @@ async function fetchActiveRuns() {
             row.innerHTML = `
                 <td>${run.playerName}</td>
                 <td class="height">${currentHeight}</td>
+                <td class="height">${floorNumber}</td>
+                <td class="height">${completionPercentage}%</td>
                 <td>${formattedElapsed}</td>
             `;
             tbody.appendChild(row);
@@ -41,7 +47,7 @@ async function fetchActiveRuns() {
         console.error('Error fetching active runs', err);
         tbody.innerHTML = `
             <tr>
-                <td colspan="3" class="error">Error loading active runs. Try again later.</td>
+                <td colspan="5" class="error">Error loading active runs. Try again later.</td>
             </tr>
         `;
     }
