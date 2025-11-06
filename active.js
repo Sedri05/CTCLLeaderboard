@@ -21,11 +21,46 @@ async function fetchActiveRuns() {
             return b.maxHeight - a.maxHeight
         });
 
+        // Helper: get height change text/class since last load (stored in localStorage)
+        function getHeightChange(name, currentRaw) {
+            try {
+                const stored = JSON.parse(localStorage.getItem('previousActiveHeights') || '{}');
+                const prevRaw = stored[name];
+                if (prevRaw === undefined) {
+                    return { text: 'New', class: '' };
+                }
+                // Use formatted meters for human-readable diff (same conversion used elsewhere)
+                const curM = parseFloat(formatHeight(currentRaw));
+                const prevM = parseFloat(formatHeight(prevRaw));
+                if (Number.isNaN(curM) || Number.isNaN(prevM)) return { text: '━', class: '' };
+                const diff = +(curM - prevM).toFixed(1);
+                if (diff > 0) return { text: `↑${diff}m`, class: 'position-up' };
+                if (diff < 0) return { text: `↓${Math.abs(diff)}m`, class: 'position-down' };
+                return { text: '━', class: '' };
+            } catch (e) {
+                return { text: '━', class: '' };
+            }
+        }
+
+        function updateStoredHeights(runsArray) {
+            try {
+                const map = {};
+                runsArray.forEach(r => {
+                    map[r.playerName] = r.maxHeight;
+                });
+                localStorage.setItem('previousActiveHeights', JSON.stringify(map));
+            } catch (e) {
+                // ignore storage errors
+            }
+        }
+
         runs.forEach(run => {
             const row = document.createElement('tr');
             
             const formattedHeight = formatHeight(run.maxHeight);
             const currentHeight = `${formattedHeight}m`;
+            // Height change since last load
+            const heightChange = getHeightChange(run.playerName, run.maxHeight);
             // Calculate floor and completion (mirrors leaderboard logic)
             const floorNumber = calculateFloor(formattedHeight);
             const completionPercentage = Math.max(0, ((formattedHeight / 1000) * 100).toFixed(1));
@@ -36,13 +71,20 @@ async function fetchActiveRuns() {
 
             row.innerHTML = `
                 <td>${run.playerName}</td>
-                <td class="height">${currentHeight}</td>
+                <td class="height">${currentHeight} <span class="position-change ${heightChange.class}">${heightChange.text}</span></td>
                 <td class="height">${floorNumber}</td>
                 <td class="height">${completionPercentage}%</td>
                 <td>${formattedElapsed}</td>
             `;
             tbody.appendChild(row);
         });
+
+        // Persist current heights for next load comparison
+        try {
+            updateStoredHeights(runs);
+        } catch (e) {
+            // ignore
+        }
     } catch (err) {
         console.error('Error fetching active runs', err);
         tbody.innerHTML = `
