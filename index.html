@@ -8,6 +8,7 @@
 </head>
 <body>
     <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+    <button class="nav-button" onclick="location.href='active.html'">View Active Runs</button>
     <h1>Player Rankings</h1>
     <div class="leaderboard">
         <table id="leaderboardTable">
@@ -16,18 +17,19 @@
                     <th>Rank</th>
                     <th>Name</th>
                     <th class="height">Max Height</th>
-                    <th class="height">Floor Esimation</th>
+                    <th class="height">Current Height</th>
+                    <th class="height">Floor Estimation</th>
                     <th class="height">Completion %</th>
                     <th>Last Updated</th>
                 </tr>
             </thead>
             <tbody id="leaderboardBody">
                 <tr>
-                    <td colspan="6" class="loading">Loading leaderboard data...</td>
+                    <td colspan="7" class="loading">Loading leaderboard data...</td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>

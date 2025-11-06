@@ -1,57 +1,4 @@
-// Theme toggle functionality
-function toggleTheme() {
-    document.body.classList.toggle('dark-mode');
-    // Save preference
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    localStorage.setItem('darkMode', isDarkMode);
-}
-
-// Check for saved theme preference
-const savedTheme = localStorage.getItem('darkMode');
-if (savedTheme === 'true') {
-    document.body.classList.add('dark-mode');
-}
-
-// Check system preference on load
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && savedTheme === null) {
-    document.body.classList.add('dark-mode');
-}
-
-// Array of cumulative heights for each floor (to be filled in)
-const FLOOR_HEIGHTS = [ // NUMBER IS START OF THE FLOOR
-    0,      // Ground floor (1)
-    40,     // Floor 2 height
-    80,     // Floor 3 height
-    120,    // Floor 4 height
-    160,    // Floor 5 height
-    200,    // Floor 6 height
-    240,    // Floor 7 height
-    280,    // Floor 8 height
-    320,    // Floor 9 height (Sedri)
-    360,    // Floor 10 height (DoggieBoo)
-    400,    // Floor 11 height (LadyLinQ)
-    480,    // Floor 12 height (SeaShark)
-    520,    // Floor 13 height (PM477)
-    580,    // Floor 14 height (Van Thias)
-    620,    // Floor 15 height (Rosati)
-    700,    // Floor 16 height (Nether Bat)
-    740,    // Floor 17 height (Rock Monster)
-    780,    // Floor 18 height (COUQ)
-    911,    // Floor 19 height (Another User)
-    940,    // Floor 20 height (Skarbels)
-    980,    // Floor 21 Height (Roof)
-
-];
-
-function calculateFloor(height) {
-    // Find the highest floor where the player's height exceeds the floor's base height
-    for (let i = FLOOR_HEIGHTS.length - 1; i >= 0; i--) {
-        if (height >= FLOOR_HEIGHTS[i]) {
-            return i+1;
-        }
-    }
-    return 0; // Ground floor if below all heights
-}
+import {formatHeight, calculateFloor, formatDate, toggleTheme} from "./utils.js";
 
 function getPositionChange(playerId, currentPosition) {
     const previousPositions = JSON.parse(localStorage.getItem('previousPositions') || '{}');
@@ -83,30 +30,48 @@ async function fetchLeaderboard() {
         const response = await fetch('https://coffeecupstudios.org/api/players');
         const data = await response.json();
         
+        const active_runs_response = await fetch('https://coffeecupstudios.org/api/runs/active');
+        const active_runs_data = await active_runs_response.json();
+
+        // Build a quick lookup map for players currently in a run (lowercased name => maxHeight)
+        const activeMap = new Map();
+        if (Array.isArray(active_runs_data)) {
+            active_runs_data.forEach(run => {
+                if (run && run.playerName) {
+                    activeMap.set(run.playerName, run.maxHeight);
+                }
+            });
+        }
+
         // Sort players by maxHeight in descending order
         const sortedPlayers = data.sort((a, b) => b.maxHeight - a.maxHeight);
-        
+
         const tbody = document.getElementById('leaderboardBody');
         tbody.innerHTML = ''; // Clear loading message
-        
+
         sortedPlayers.forEach((player, index) => {
             const row = document.createElement('tr');
             
             // Format the date
-            const lastUpdated = new Date(player.updatedAt);
-            const dateString = lastUpdated.toLocaleDateString() + ' ' + 
-                             lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const dateString = formatDate(player.updatedAt);
             
-            // Format the height with 2 decimal places
-            const formattedHeight = ((player.maxHeight / 100) - 131.7515).toFixed(1);
-            
-            // Calculate which floor the player is on
-            const floorNumber = calculateFloor(parseFloat(formattedHeight));
-            
+            // Format the height with 1 decimal place (project-specific conversion)
+            const formattedHeight = formatHeight(player.maxHeight);
+
+            // Current live height if the player is currently in a run
+            const currentRaw = activeMap.get(player.name);
+
+            const formattedCurrent = (currentRaw != null && !Number.isNaN(currentRaw)) ? `${formatHeight(currentRaw)}m` : '-';
+
+            // Calculate which floor the player is on (use numeric value)
+            const floorNumber = calculateFloor(formattedHeight);
+
             // Calculate completion percentage (1000 is max height)
             const completionPercentage = ((formattedHeight / 1000) * 100).toFixed(1);
             
             const positionChange = getPositionChange(player.name, index + 1);
+
+            
             
             row.innerHTML = `
                 <td class="rank">${index + 1}
@@ -114,6 +79,7 @@ async function fetchLeaderboard() {
                 </td>
                 <td>${player.name}</td>
                 <td class="height">${formattedHeight}m</td>
+                <td class="height">${formattedCurrent}</td>
                 <td class="height">${floorNumber}</td>
                 <td class="height">${completionPercentage}%</td>
                 <td>${dateString}</td>
@@ -128,7 +94,7 @@ async function fetchLeaderboard() {
         const tbody = document.getElementById('leaderboardBody');
         tbody.innerHTML = `
             <tr>
-                <td colspan="6" class="error">
+                <td colspan="7" class="error">
                     Error loading leaderboard data. Please try again later.
                 </td>
             </tr>

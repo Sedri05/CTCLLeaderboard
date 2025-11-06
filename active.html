@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Runs</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+    <button class="nav-button" onclick="location.href='index.html'">View Leaderboard</button>
+    <h1>Active Runs</h1>
+
+    <div class="leaderboard">
+        <table id="leaderboardTable">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th class="height">Current Height</th>
+                    <th>Time Elapsed</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboardBody">
+                <tr>
+                    <td colspan="3" class="loading">Loading active runs...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script type="module" src="active.js"></script>
+</body>
+</html>
