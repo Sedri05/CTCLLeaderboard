@@ -2,6 +2,10 @@ export function formatHeight(height){
     return ((height / 100) - 132.1).toFixed(1);
 }
 
+export function invertFormatHeight(value) {
+    return (value + 132.1) * 100;
+}
+
 export const FLOOR_HEIGHTS = [ // NUMBER IS START OF THE FLOOR
     0,      // Ground floor (1)
     40,     // Floor 2 height

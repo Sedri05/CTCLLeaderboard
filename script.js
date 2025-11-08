@@ -1,4 +1,4 @@
-import { formatHeight, calculateFloor, formatDate, toggleTheme } from "./utils.js";
+import { formatHeight, calculateFloor, formatDate, toggleTheme, invertFormatHeight } from "./utils.js";
 
 function getPositionChange(playerId, currentPosition) {
     const previousPositions = JSON.parse(localStorage.getItem("previousPositions") || "{}");
@@ -51,6 +51,15 @@ function getHeightChange(name) {
     }
 }
 
+function overwriteHeight(players){
+    let heights = {"SeaShark": 348}
+    players.forEach(player => {
+       let height = invertFormatHeight(heights[player.name] ?? 0);
+        if (height > player.maxHeight) player.maxHeight = height;
+    });
+    return players
+}
+
 function updateStoredHeights(playersArray) {
         const stored = JSON.parse(localStorage.getItem("previousMaxHeights") || "{}");
         playersArray.forEach((p) => {
@@ -71,7 +80,7 @@ function updateStoredHeights(playersArray) {
 async function fetchLeaderboard() {
     try {
         const response = await fetch("https://coffeecupstudios.org/api/players");
-        const data = await response.json();
+        let data = await response.json();
 
         const active_runs_response = await fetch("https://coffeecupstudios.org/api/runs/active");
         const active_runs_data = await active_runs_response.json();
@@ -87,6 +96,7 @@ async function fetchLeaderboard() {
         }
 
         // Sort players by maxHeight in descending order
+        data = overwriteHeight(data);
         const sortedPlayers = data.sort((a, b) => b.maxHeight - a.maxHeight);
 
         if (JSON.parse(localStorage.getItem("previousMaxHeights")) == undefined){
